@@ -1,6 +1,10 @@
 # Settings
-export pguser=pgthib
-export db_name=opendata
+pguser=pgthib
+db_name=opendata
+# Change directory to script path
+script_dir=$(dirname $0)
+echo $script_dir
+cd $script_dir
 # Geovoies https://opendata.infrabel.be/explore/dataset/geovoies
 wget -nv -O geotracks.json "https://opendata.infrabel.be/explore/dataset/geovoies/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.geotracks;'
@@ -25,4 +29,7 @@ ogr2ogr -a_srs EPSG:31370 -f PGDump -nln track_segments -lco "GEOMETRY_NAME=geom
 wget -nv -O kp_by_line.csv "https://opendata.infrabel.be/explore/dataset/association-des-bornes-kilometriques-et-des-voies/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=,"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.kp_by_line;' -c "\copy infrabel.kp_by_line (kp_id, line_id) from 'kp_by_line.csv' csv header;"
 # Mise à jour des vues matérialisées
-psql -U $pguser -d $db_name -c 'REFRESH MATERIALIZED VIEW infrabel.kp_by_track_mv;'
+psql -U $pguser -d $db_name \
+	-c 'REFRESH MATERIALIZED VIEW infrabel.kp_by_track_mv;' \
+	-c 'REFRESH MATERIALIZED VIEW infrabel.geotracks_dumped_mv;' \
+	-c 'REFRESH MATERIALIZED VIEW infrabel.geotracks_lrs_mv;'

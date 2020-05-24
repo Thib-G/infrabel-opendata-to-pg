@@ -1,3 +1,4 @@
+DROP MATERIALIZED VIEW IF EXISTS infrabel.geotracks_dumped_mv;
 DROP MATERIALIZED VIEW IF EXISTS infrabel.kp_by_track_mv;
 
 -- infrabel.geotracks definition
@@ -154,3 +155,33 @@ FROM
 CREATE UNIQUE INDEX ON infrabel.kp_by_track_mv (auto_id);
 CREATE INDEX ON infrabel.kp_by_track_mv USING gist(geom);
 
+
+CREATE MATERIALIZED VIEW infrabel.geotracks_dumped_mv AS
+SELECT
+  c.id AS tra_id,
+  (c.geom_dump).path[1] AS nr,
+  (c.geom_dump).geom::geometry(LineString, 31370) AS geom
+FROM 
+(
+  SELECT
+    b.id,
+    ST_Dump(b.geom) AS geom_dump
+  FROM
+  (
+    SELECT
+      a.id,
+      ST_Multi(ST_LineMerge(ST_Collect(a.geom))) AS geom
+    FROM
+    (
+      SELECT
+        tra.id,
+        (ST_Dump(tra.geom)).geom AS geom 
+      FROM
+        infrabel.geotracks AS tra
+    ) AS a
+    GROUP BY
+      a.id
+  ) AS b
+) AS c;
+CREATE UNIQUE INDEX ON infrabel.geotracks_dumped_mv (tra_id, nr);
+CREATE INDEX ON infrabel.geotracks_dumped_mv USING gist(geom);

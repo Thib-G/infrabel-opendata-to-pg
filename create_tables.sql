@@ -1,3 +1,4 @@
+DROP MATERIALIZED VIEW IF EXISTS infrabel.geotracks_lrs_mv;
 DROP MATERIALIZED VIEW IF EXISTS infrabel.geotracks_dumped_mv;
 DROP MATERIALIZED VIEW IF EXISTS infrabel.kp_by_track_mv;
 
@@ -185,3 +186,106 @@ FROM
 ) AS c;
 CREATE UNIQUE INDEX ON infrabel.geotracks_dumped_mv (tra_id, nr);
 CREATE INDEX ON infrabel.geotracks_dumped_mv USING gist(geom);
+
+
+CREATE MATERIALIZED VIEW infrabel.geotracks_lrs_mv AS
+WITH a AS (
+SELECT 
+  tra.tra_id,
+  tra.nr,
+  kbt.kp_id,
+  kbt.kp_name::int AS kp_name,
+  ST_LineLocatePoint(tra.geom, kbt.geom) AS fraction,
+  tra.geom
+FROM 
+  infrabel.geotracks_dumped_mv AS tra
+  JOIN infrabel.kp_by_track_mv kbt
+    ON kbt.tra_id = tra.tra_id
+), b AS (
+SELECT
+  a.tra_id,
+  a.nr,
+  a.kp_id AS kp_id_from,
+  a.kp_name AS kp_name_from,
+  a.fraction AS fraction_from,
+  LEAD(a.kp_id) OVER w AS kp_id_to,
+  LEAD(a.kp_name) OVER w AS kp_name_to,
+  LEAD(a.fraction) OVER w AS fraction_to,
+  a.geom
+FROM
+  a
+WINDOW w AS (PARTITION BY a.tra_id, a.nr ORDER BY a.kp_name)
+ORDER BY
+  a.tra_id,
+  a.nr,
+  a.fraction
+), c AS (
+SELECT
+  bb.tra_id,
+  bb.nr,
+  bb.kp_id_from,
+  bb.kp_name_from,
+  bb.fraction_from,
+  bb.kp_id_to,
+  bb.kp_name_to,
+  bb.fraction_to,
+  ST_AddMeasure(bb.geom, bb.kp_name_from * 1000.0, bb.kp_name_to * 1000.0) AS geom
+FROM
+(
+  SELECT
+    b.tra_id,
+    b.nr,
+    b.kp_id_from,
+    b.kp_name_from,
+    b.fraction_from,
+    b.kp_id_to,
+    b.kp_name_to,
+    b.fraction_to,
+    ST_LineSubstring(geom, b.fraction_from, b.fraction_to) AS geom
+  FROM
+    b
+  WHERE
+    b.fraction_from < b.fraction_to
+) AS bb
+WHERE
+  ST_GeometryType(bb.geom) = 'ST_LineString'
+), d AS (
+SELECT
+  c.tra_id,
+  c.nr,
+  ST_DumpPoints(c.geom) dump_pt
+FROM 
+  c
+), e AS (
+SELECT
+  d.tra_id,
+  d.nr,
+  (d.dump_pt).geom AS geom_pt,
+  (d.dump_pt).path[1] AS path_pt
+FROM d
+)
+SELECT
+  e.tra_id,
+  e.nr,
+  geo.trackcode,
+  geo.trackname,
+  geo.linecnum,
+  geo.linecalfa,
+  ST_MakeLine(e.geom_pt ORDER BY e.path_pt)::geometry(LineStringM, 31370) AS geom
+FROM
+  e
+JOIN
+  (
+    SELECT DISTINCT
+      id AS tra_id,
+      trackcode,
+      trackname,
+      linecnum,
+      linecalfa
+    FROM
+      infrabel.geotracks g
+  ) geo ON e.tra_id = geo.tra_id
+GROUP BY
+  1, 2, 3, 4, 5, 6;
+CREATE UNIQUE INDEX ON infrabel.geotracks_lrs_mv (tra_id, nr);
+CREATE INDEX ON infrabel.geotracks_lrs_mv USING gist(geom);

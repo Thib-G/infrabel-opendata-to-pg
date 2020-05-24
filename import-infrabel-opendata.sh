@@ -27,7 +27,9 @@ psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.track_segments;'
 ogr2ogr -a_srs EPSG:31370 -f PGDump -nln track_segments -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "track_segments.json" | psql -U $pguser -d $db_name -q -f -
 # Association BK et lignes https://opendata.infrabel.be/explore/dataset/association-des-bornes-kilometriques-et-des-voies
 wget -nv -O kp_by_line.csv "https://opendata.infrabel.be/explore/dataset/association-des-bornes-kilometriques-et-des-voies/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=,"
-psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.kp_by_line;' -c "\copy infrabel.kp_by_line (kp_id, line_id) from 'kp_by_line.csv' csv header;"
+psql -U $pguser -d $db_name \
+	-c 'TRUNCATE infrabel.kp_by_line;' \
+	-c "\copy infrabel.kp_by_line (kp_id, line_id) from 'kp_by_line.csv' csv header;"
 # Mise à jour des vues matérialisées
 psql -U $pguser -d $db_name \
 	-c 'REFRESH MATERIALIZED VIEW infrabel.kp_by_track_mv;' \

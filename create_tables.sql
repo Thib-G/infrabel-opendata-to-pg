@@ -14,7 +14,7 @@ CREATE TABLE infrabel.geotracks (
   modifdate date,
   trackname text,
   linecnum int,
-  geo_point_2d _float8,
+  geo_point_2d double precision[],
   linecalfa text,
   id int
 );
@@ -33,7 +33,7 @@ CREATE TABLE infrabel.kp (
   x text,
   id int4 NULL,
   "name" text,
-  geo_point_2d _float8
+  geo_point_2d double precision[]
 );
 CREATE INDEX kp_geom_geom_idx ON infrabel.kp USING gist (geom);
 
@@ -75,7 +75,7 @@ CREATE TABLE infrabel.line_sections (
   linecat_p text,
   p400 text,
   ptcartoname text,
-  geo_point_2d _float8,
+  geo_point_2d double precision[],
   ls_id text,
   mto int,
   gauge text,

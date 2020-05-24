@@ -272,7 +272,7 @@ SELECT
   geo.linecnum,
   geo.linecalfa,
   now() AS last_refresh,
-  ST_MakeLine(e.geom_pt ORDER BY e.path_pt)::geometry(LineStringM, 31370) AS geom
+  ST_MakeLine(e.geom_pt ORDER BY ST_M(e.geom_pt))::geometry(LineStringM, 31370) AS geom
 FROM
   e
 JOIN

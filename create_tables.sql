@@ -271,6 +271,7 @@ SELECT
   geo.trackname,
   geo.linecnum,
   geo.linecalfa,
+  now() AS last_refresh,
   ST_MakeLine(e.geom_pt ORDER BY e.path_pt)::geometry(LineStringM, 31370) AS geom
 FROM
   e

@@ -142,7 +142,7 @@ FROM
      tra.id AS tra_id,
      kp.id AS kp_id,
      kp."name" AS kp_name,
-     ST_ClosestPoint(tra.geom, kp.geom) AS geom
+     ST_ClosestPoint(tra.geom, kp.geom)::geometry(Point, 31370) AS geom
    FROM
      infrabel.kp AS kp
      JOIN infrabel.kp_by_line AS kbl ON kp.id = kbl.kp_id

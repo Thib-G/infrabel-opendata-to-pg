@@ -135,7 +135,7 @@ SELECT
 FROM
 (
   SELECT DISTINCT ON (tra.id, kp.id)
-	 tra.ogc_fid,
+	   tra.ogc_fid AS tra_ogc_fid,
      tra.trackcode,
      tra.status,
      tra.linecalfa,

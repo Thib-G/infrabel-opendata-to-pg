@@ -287,6 +287,6 @@ JOIN
       infrabel.geotracks g
   ) geo ON e.tra_id = geo.tra_id
 GROUP BY
-  1, 2, 3, 4, 5, 6;
+  1, 2, 3, 4, 5, 6, 7;
 CREATE UNIQUE INDEX ON infrabel.geotracks_lrs_mv (tra_id, nr);
 CREATE INDEX ON infrabel.geotracks_lrs_mv USING gist(geom);

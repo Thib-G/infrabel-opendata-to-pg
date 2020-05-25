@@ -113,4 +113,4 @@ L 132_1  |MULTIPOINT ((4.39149071186285 50.3731969520237))|
 
 ## Example in QGIS
 
-[!QGIS](qgis.png)
+![QGIS](qgis.png)

@@ -1,6 +1,15 @@
 # infrabel-opendata-to-pg
 Copy tables from Infrabel open data to PostgreSQL/PostGIS
 
+## Tools
+You need to install the following tools:
+
+* PostgreSQL
+* PostGIS
+* ogr2ogr (from GDAL)
+
+I'm using a VM running on Debian 10 Buster, with PostgreSQL 12, PostGIS 3 and GDAL 2.4.
+
 ## Setup database
 Install [PostgreSQL](https://postgresql.org) and [PostGIS](https://postgis.net) for your operating.
 

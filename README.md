@@ -66,9 +66,12 @@ Run script
 ## Sample queries
 
 ```sql
--- Find the Kilometer Pole from a known position (4.391906, 50.373239)
+-- Find the Kilometer Pole on the nearest track (with a max distance of 100m)
+-- from a known position (4.391906, 50.373239) on the nearest track
 WITH pt_l72 (geom) AS
 (
+  -- as our track's geometries are in Lambert 72 coordinates, we first need
+  -- to convert the GPS coordinates in WGS84 (EPSG:4326) to Lambert 72 (EPSG:31370)
   VALUES (ST_Transform(ST_SetSRID(ST_MakePoint(4.391906, 50.373239), 4326), 31370))
 )
 SELECT
@@ -92,7 +95,7 @@ L 132_1  |70517.0|POINT(4.39149050813109 50.3731977921141)|
 ```
 
 ```sql
--- Find the GPS coordinates at of Kilometer Pole on a given track
+-- Find the GPS coordinates at of Kilometer Pole (70.517) on a given track (L 132_1)
 SELECT
   g.trackcode,
   ST_AsText(ST_Transform(ST_LocateAlong(g.geom, 70517), 4326)) AS geom

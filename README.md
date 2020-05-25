@@ -71,7 +71,7 @@ Run script
 WITH pt_l72 (geom) AS
 (
   -- as our track's geometries are in Lambert 72 coordinates, we first need
-  -- to convert the GPS coordinates in WGS84 (EPSG:4326) to Lambert 72 (EPSG:31370)
+  -- to convert the GPS coordinates from WGS84 (EPSG:4326) to Lambert 72 (EPSG:31370)
   VALUES (ST_Transform(ST_SetSRID(ST_MakePoint(4.391906, 50.373239), 4326), 31370))
 )
 SELECT

@@ -99,7 +99,7 @@ L 132_1  |70517.0|POINT(4.39149050813109 50.3731977921141)|
 ```
 
 ```sql
--- Find the GPS coordinates at of Kilometer Pole (70.517) on a given track (L 132_1)
+-- Find the GPS coordinates of Kilometer Pole (70.517) on a given track (L 132_1)
 SELECT
   g.trackcode,
   ST_AsText(ST_Transform(ST_LocateAlong(g.geom, 70517), 4326)) AS geom

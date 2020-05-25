@@ -62,3 +62,48 @@ Run script
 ```
 ./import-infrabel-opendata.sh
 ```
+
+## Sample queries
+
+```sql
+-- Find the Kilometer Pole from a known position (4.391906, 50.373239)
+WITH pt_l72 (geom) AS
+(
+  VALUES (ST_Transform(ST_SetSRID(ST_MakePoint(4.391906, 50.373239), 4326), 31370))
+)
+SELECT
+  g.trackcode,
+  ROUND(ST_InterpolatePoint(g.geom, p.geom)) AS measure,
+  ST_AsText(ST_Transform(ST_ClosestPoint(g.geom, p.geom), 4326)) AS point_on_line
+FROM
+  infrabel.geotracks_lrs_mv AS g
+JOIN
+  pt_l72 AS p ON ST_DWithin(g.geom, p.geom, 100.0)
+ORDER BY
+  ST_Distance(g.geom, p.geom)
+LIMIT
+  1;
+```
+
+```
+trackcode|measure|point_on_line                           |
+---------|-------|----------------------------------------|
+L 132_1  |70517.0|POINT(4.39149050813109 50.3731977921141)|
+```
+
+```sql
+-- Find the GPS coordinates at of Kilometer Pole on a given track
+SELECT
+  g.trackcode,
+  ST_AsText(ST_Transform(ST_LocateAlong(g.geom, 70517), 4326)) AS geom
+FROM
+  infrabel.geotracks_lrs_mv AS g
+WHERE
+  g.trackcode = 'L 132_1';
+```
+
+```
+trackcode|geom                                            |
+---------|------------------------------------------------|
+L 132_1  |MULTIPOINT ((4.39149071186285 50.3731969520237))|
+```

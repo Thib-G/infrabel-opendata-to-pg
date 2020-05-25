@@ -8,6 +8,7 @@ You need to install the following tools:
 * PostgreSQL
 * PostGIS
 * ogr2ogr (from GDAL)
+* wget
 
 I'm using a VM running on Debian 10 Buster, with PostgreSQL 12, PostGIS 3 and GDAL 2.4. Debian Buster comes with PostgreSQL 11. Use the [pgdg repo](https://wiki.postgresql.org/wiki/Apt) to get the latest PostgreSQL version for Debian (12 at the moment).
 

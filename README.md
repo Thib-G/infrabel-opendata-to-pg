@@ -70,7 +70,8 @@ Run script
 
 ```sql
 -- Find the Kilometer Pole on the nearest track (with a max distance of 100m)
--- from a known position (4.391906, 50.373239) on the nearest track
+-- from a known position (4.391906, 50.373239)
+-- and also return the coordinates of the projected point on the track axis
 WITH pt_l72 (geom) AS
 (
   -- as our track's geometries are in Lambert 72 coordinates, we first need

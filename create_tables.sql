@@ -128,7 +128,7 @@ CREATE TABLE infrabel.track_segments (
 );
 CREATE INDEX ON infrabel.track_segments USING gist (geom);
 
-
+-- Join tracks and KPs and project KPs on track axis
 CREATE MATERIALIZED VIEW infrabel.kp_by_track_mv AS
 SELECT
   ROW_NUMBER() OVER() AS auto_id,
@@ -136,8 +136,9 @@ SELECT
   now() AS last_refresh
 FROM
 (
+  -- Get first track/KP combination, ordered by distance
   SELECT DISTINCT ON (tra.id, kp.id)
-	   tra.ogc_fid AS tra_ogc_fid,
+     tra.ogc_fid AS tra_ogc_fid,
      tra.trackcode,
      tra.status,
      tra.linecalfa,
@@ -145,6 +146,7 @@ FROM
      tra.id AS tra_id,
      kp.id AS kp_id,
      kp."name" AS kp_name,
+     -- Snap KP to track axis
      ST_ClosestPoint(tra.geom, kp.geom)::geometry(Point, 31370) AS geom
    FROM
      infrabel.kp AS kp
@@ -156,7 +158,7 @@ FROM
 CREATE UNIQUE INDEX ON infrabel.kp_by_track_mv (auto_id);
 CREATE INDEX ON infrabel.kp_by_track_mv USING gist(geom);
 
-
+-- Merge track segments and then dump multilines to lines and path number
 CREATE MATERIALIZED VIEW infrabel.geotracks_dumped_mv AS
 SELECT
   c.id AS tra_id,
@@ -187,9 +189,11 @@ FROM
 CREATE UNIQUE INDEX ON infrabel.geotracks_dumped_mv (tra_id, nr);
 CREATE INDEX ON infrabel.geotracks_dumped_mv USING gist(geom);
 
-
+-- Generate Linear Referencing System from tracks and KPs
+-- by adding a M-value to LineStrings				  
 CREATE MATERIALIZED VIEW infrabel.geotracks_lrs_mv AS
 WITH a AS (
+-- Calculate fraction (from 0 to 1) of each KP on track
 SELECT 
   tra.tra_id,
   tra.nr,
@@ -202,6 +206,7 @@ FROM
   JOIN infrabel.kp_by_track_mv kbt
     ON kbt.tra_id = tra.tra_id
 ), b AS (
+-- Add next KP and fraction for each row
 SELECT
   a.tra_id,
   a.nr,
@@ -220,6 +225,7 @@ ORDER BY
   a.nr,
   a.fraction
 ), c AS (
+-- 2) Add measures (KP from and KP to) for each segment
 SELECT
   bb.tra_id,
   bb.nr,
@@ -232,6 +238,7 @@ SELECT
   ST_AddMeasure(bb.geom, bb.kp_name_from * 1000.0, bb.kp_name_to * 1000.0) AS geom
 FROM
 (
+  -- 1) Cut lines at fractions to generate segments of ~1 km
   SELECT
     b.tra_id,
     b.nr,
@@ -250,6 +257,7 @@ FROM
 WHERE
   ST_GeometryType(bb.geom) = 'ST_LineString'
 ), d AS (
+-- Convert lines into sets of MULTIPOINT M
 SELECT
   c.tra_id,
   c.nr,
@@ -257,13 +265,15 @@ SELECT
 FROM 
   c
 ), e AS (
+-- Explode MULTIPOINT M to list of vertices (POINT M)
 SELECT
   d.tra_id,
   d.nr,
   (d.dump_pt).geom AS geom_pt,
   (d.dump_pt).path[1] AS path_pt
 FROM d
-)
+)				       
+-- Recreate lines from vertices, ordered by M and grouped by track id
 SELECT
   e.tra_id,
   e.nr,
@@ -277,6 +287,7 @@ FROM
   e
 JOIN
   (
+    -- Join with distinct list of attributes
     SELECT DISTINCT
       id AS tra_id,
       trackcode,

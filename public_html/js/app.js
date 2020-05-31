@@ -27,9 +27,7 @@ $(document).ready(function() {
 
   map.on('click', function(e) {
     lg.clearLayers();
-    var lat = e.latlng.lat;
-    var lng = e.latlng.lng;
-    $.getJSON('api/get-kp?lat=' + lat + '&lng=' + lng, function (data) {
+    $.post('api/get-kp', { lat: e.latlng.lat, lng: e.latlng.lng }, function (data) {
       if (data) {
         var circle = L.geoJSON(data);
         circle.bindPopup(function (layer) {
@@ -47,5 +45,5 @@ $(document).ready(function() {
         circle.openPopup();
       }
     });
-  });
+  }, 'json');
 });

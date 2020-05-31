@@ -1,6 +1,11 @@
 # infrabel-opendata-to-pg
-* Copies tables from Infrabel open data portal to PostgreSQL/PostGIS.
-* Generates a Linear Referencing System from the geometry of the tracks and the positions of kilometer poles.
+Thiq tool allows to:
+
+* Copy tables from Infrabel open data portal to PostgreSQL/PostGIS.
+* Generate a Linear Referencing System from the geometry of the tracks and the positions of kilometer poles.
+* Click on a map to show the kilometer pole and distance on the nearesr track. Demo here: https://railbe-lrs.kediss.eu/
+
+The website is really simple and does not use any framework besides Leaflet and jQuery. The backend consists of two PHP files.
 
 ## Tools
 You need to install the following tools:

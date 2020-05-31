@@ -27,23 +27,30 @@ $(document).ready(function() {
 
   map.on('click', function(e) {
     lg.clearLayers();
-    $.post('api/get-kp', { lat: e.latlng.lat, lng: e.latlng.lng }, function (data) {
-      if (data) {
-        var circle = L.geoJSON(data);
-        circle.bindPopup(function (layer) {
-          var p = layer.feature.properties;
-          var content =
-            '<p>' +
-            'Track: <b>' + p.trackcode + '</b>' +
-            '<br />KP: <b>' + p.measure + '</b>' +
-            '<br />' + layer.getLatLng().lat.toFixed(6) + ',' + layer.getLatLng().lng.toFixed(6) +
-            '<br />Distance from click: ' + p.distance.toFixed() + ' m' +
-            '</p>';
-          return content;
-        });
-        lg.addLayer(circle);
-        circle.openPopup();
+    $.ajax({
+      type: 'POST',
+      url: 'api/get-kp',
+      data: JSON.stringify({ lat: e.latlng.lat, lng: e.latlng.lng }),
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function (data) {
+        if (data) {
+          var circle = L.geoJSON(data);
+          circle.bindPopup(function (layer) {
+            var p = layer.feature.properties;
+            var content =
+              '<p>' +
+              'Track: <b>' + p.trackcode + '</b>' +
+              '<br />KP: <b>' + p.measure + '</b>' +
+              '<br />' + layer.getLatLng().lat.toFixed(6) + ',' + layer.getLatLng().lng.toFixed(6) +
+              '<br />Distance from click: ' + p.distance.toFixed() + ' m' +
+              '</p>';
+            return content;
+          });
+          lg.addLayer(circle);
+          circle.openPopup();
+        }
       }
     });
-  }, 'json');
+  });
 });

@@ -3,8 +3,10 @@
   header('Content-Type: application/json');
   include './secrets/connstring.php';
 
-  $lat = $_POST['lat'];
-  $lng = $_POST['lng'];
+  $post_data = json_decode(file_get_contents('php://input'), true);
+
+  $lat = $post_data['lat'];
+  $lng = $post_data['lng'];
 
   $query = <<<SQL
 -- Find the Kilometer Pole on the nearest track (with a max distance of 10000m)

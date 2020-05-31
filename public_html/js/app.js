@@ -35,8 +35,8 @@ $(document).ready(function() {
       contentType: 'application/json',
       success: function (data) {
         if (data) {
-          var circle = L.geoJSON(data);
-          circle.bindPopup(function (layer) {
+          var marker = L.geoJSON(data);
+          marker.bindPopup(function (layer) {
             var p = layer.feature.properties;
             var content =
               '<p>' +
@@ -47,8 +47,8 @@ $(document).ready(function() {
               '</p>';
             return content;
           });
-          lg.addLayer(circle);
-          circle.openPopup();
+          lg.addLayer(marker);
+          marker.openPopup();
         }
       }
     });

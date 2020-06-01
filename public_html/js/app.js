@@ -6,7 +6,7 @@ $(document).ready(function() {
     center: center,
     zoom: zoom
   });
-  var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}@2x?access_token=' + mapboxKey,
+  var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}{r}?access_token=' + mapboxKey,
     {
       attribution: '&copy; <a href="https://www.mapbox.com/feedback/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       tileSize: 512,

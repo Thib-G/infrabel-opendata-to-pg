@@ -50,9 +50,9 @@ $(document).ready(function() {
         'You are within ' + radius + ' meters from this point' +
         '<br />' + e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6) +
         '</p>'
-      );
+      );      
+      lg.addLayer(here);
     }
-    lg.addLayer(here);
     $.ajax({
       type: 'POST',
       url: 'api/get-kp',

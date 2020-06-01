@@ -25,8 +25,34 @@ $(document).ready(function() {
   var lg = L.layerGroup();
   lg.addTo(map);
 
-  map.on('click', function(e) {
+  map.locate({ setView: true, maxZoom: 14 });
+
+  map.on('click', getKp);
+  map.on('locationfound', getKp);
+
+  function getKp(e) {
     lg.clearLayers();
+    if (e.type === 'click') {      
+      var here = L.circleMarker(e.latlng, { radius: 6 });
+      here.bindPopup(
+        '<p>' +
+        'You clicked here' +
+        '<br />' + e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6) +
+        '</p>'
+      );
+      lg.addLayer(here);
+    }
+    if (e.type === 'locationfound') {
+      var radius = e.accuracy;
+      var here = L.circle(e.latlng, { radius: radius });
+      here.bindPopup(
+        '<p>' +
+        'You are within ' + radius + ' meters from this point' +
+        '<br />' + e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6) +
+        '</p>'
+      );
+    }
+    lg.addLayer(here);
     $.ajax({
       type: 'POST',
       url: 'api/get-kp',
@@ -43,7 +69,7 @@ $(document).ready(function() {
               'Track: <b>' + p.trackcode + '</b>' +
               '<br />KP: <b>' + p.measure + '</b>' +
               '<br />' + layer.getLatLng().lat.toFixed(6) + ',' + layer.getLatLng().lng.toFixed(6) +
-              '<br />Distance from click: ' + p.distance.toFixed() + ' m' +
+              '<br />Distance from ' + e.type + ': ' + p.distance.toFixed() + ' m' +
               '</p>';
             return content;
           });
@@ -52,5 +78,5 @@ $(document).ready(function() {
         }
       }
     });
-  });
+  }
 });

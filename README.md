@@ -1,5 +1,5 @@
 # infrabel-opendata-to-pg
-Thiq tool allows to:
+This tool allows to:
 
 * Copy tables from Infrabel open data portal to PostgreSQL/PostGIS.
 * Generate a Linear Referencing System from the geometry of the tracks and the positions of kilometer poles.

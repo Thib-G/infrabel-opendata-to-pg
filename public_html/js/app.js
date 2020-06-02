@@ -16,23 +16,64 @@ $(document).ready(function() {
     });
   tiles.addTo(map);
 
-  var geojsonLayer = L.geoJSON();
-  geojsonLayer.addTo(map);
+  var linesLayer = L.geoJSON();
+  linesLayer.addTo(map);
 
-  $.getJSON('api/get-lines', function (data) {
-    geojsonLayer.addData(data);
+  var pnLayer = L.geoJSON(null, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.circleMarker(latlng, { radius: 4, color: 'green', opacity: 0.5 });
+    },
+    onEachFeature: function (feature, layer) {
+      var p = feature.properties;
+      var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
+      var content =
+        '<b>' + p.fld_naam_ramses + '</b>' +
+        '<br /><br />' + p.fld_postcode_en_gemeente +
+        '<br /><br />' + p.fld_actief_passief +
+        '<br /><br />' +
+        '<a href="https://www.google.com/maps/?daddr=' + latlng + '" target="_blank">Google Maps</a> | ' +
+        '<a href="waze://?ll=' + latlng + '" target="_blank">Waze</a> | ' +
+        '<a href="https://maps.apple.com/?daddr=' + latlng + '" target="_blank">Apple</a>';
+      layer.bindPopup(content);
+      layer.on({
+        mouseover: function() {
+          layer.setStyle({ radius: 6, opacity: 1.0 });
+        },
+        mouseout: function() {
+          layer.setStyle({ radius: 4, opacity: 0.5 });
+        }
+      });
+    }
   });
 
-  var lg = L.layerGroup();
-  lg.addTo(map);
+  var baseLayers = {
+    Grey: tiles
+  };
+  var overlays = {
+    Tracks: linesLayer,
+    'Level crossings': pnLayer
+  };
+  L.control.layers(baseLayers, overlays).addTo(map);
 
-  map.locate({ setView: true, maxZoom: 14 });
+  $.getJSON('api/get-lines', function (data) {
+    linesLayer.addData(data);
+  });
+
+  $.getJSON('api/get-pn', function (data) {
+    pnLayer.addData(data);
+  });
+
+  var lgLoc = L.layerGroup();
+  lgLoc.addTo(map);
+
+  // map.locate({ setView: true, maxZoom: 14 });
+  L.control.locate().addTo(map);
 
   map.on('click', getKp);
   map.on('locationfound', getKp);
 
   function getKp(e) {
-    lg.clearLayers();
+    lgLoc.clearLayers();
     if (e.type === 'click') {      
       var here = L.circleMarker(e.latlng, { radius: 6 });
       here.bindPopup(
@@ -41,7 +82,7 @@ $(document).ready(function() {
         '<br />' + e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6) +
         '</p>'
       );
-      lg.addLayer(here);
+      lgLoc.addLayer(here);
     }
     if (e.type === 'locationfound') {
       var radius = e.accuracy;
@@ -52,7 +93,7 @@ $(document).ready(function() {
         '<br />' + e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6) +
         '</p>'
       );      
-      lg.addLayer(here);
+      lgLoc.addLayer(here);
     }
     $.ajax({
       type: 'POST',
@@ -68,13 +109,13 @@ $(document).ready(function() {
             var content =
               '<p>' +
               'Track: <b>' + p.trackcode + '</b>' +
-              '<br />KP: <b>' + p.measure + '</b>' +
+              '<br />KP: <b>' + p.measure.toFixed() + '</b>' +
               '<br />' + layer.getLatLng().lat.toFixed(6) + ',' + layer.getLatLng().lng.toFixed(6) +
               '<br />Distance from ' + e.type + ': ' + p.distance.toFixed() + ' m' +
               '</p>';
             return content;
           });
-          lg.addLayer(marker);
+          lgLoc.addLayer(marker);
           marker.openPopup();
         }
       }

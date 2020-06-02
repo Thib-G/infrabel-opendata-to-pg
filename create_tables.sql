@@ -4,7 +4,7 @@ DROP MATERIALIZED VIEW IF EXISTS infrabel.kp_by_track_mv;
 
 -- Drop table
 
--- DROP TABLE infrabel.geopn;
+DROP TABLE IF EXISTS infrabel.geopn;
 
 CREATE TABLE infrabel.geopn (
 	ogc_fid serial PRIMARY KEY,

@@ -2,6 +2,22 @@ DROP MATERIALIZED VIEW IF EXISTS infrabel.geotracks_lrs_mv;
 DROP MATERIALIZED VIEW IF EXISTS infrabel.geotracks_dumped_mv;
 DROP MATERIALIZED VIEW IF EXISTS infrabel.kp_by_track_mv;
 
+-- Drop table
+
+-- DROP TABLE infrabel.geopn;
+
+CREATE TABLE infrabel.geopn (
+	ogc_fid serial PRIMARY KEY,
+	geom geometry(POINT, 31370),
+	fld_naam_ramses text,
+	fld_postcode_en_gemeente text,
+	position_du_passage_a_niveau double precision[],
+	fld_actief_passief text,
+	fld_geo_x text,
+	fld_geo_y text,
+);
+CREATE INDEX ON infrabel.geopn USING gist (geom);
+
 -- infrabel.geotracks definition
 
 -- Drop table

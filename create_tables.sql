@@ -14,7 +14,7 @@ CREATE TABLE infrabel.geopn (
 	position_du_passage_a_niveau double precision[],
 	fld_actief_passief text,
 	fld_geo_x text,
-	fld_geo_y text,
+	fld_geo_y text
 );
 CREATE INDEX ON infrabel.geopn USING gist (geom);
 

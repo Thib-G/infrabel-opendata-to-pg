@@ -7,6 +7,7 @@ echo $script_dir
 cd $script_dir
 # GeoPN https://opendata.infrabel.be/explore/dataset/geopn
 wget -nv -O geopn.json "https://opendata.infrabel.be/explore/dataset/geopn/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
+psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.geopn;'
 ogr2ogr -a_srs EPSG:31370 -f PGDump -nln geopn -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "geopn.json" | psql -U $pguser -d $db_name -q -f -
 # Geovoies https://opendata.infrabel.be/explore/dataset/geovoies
 wget -nv -O geotracks.json "https://opendata.infrabel.be/explore/dataset/geovoies/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"

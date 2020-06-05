@@ -21,6 +21,8 @@ FROM
       ST_Transform(ST_Simplify(geom, 0.5), 4326) AS geom
     FROM
       infrabel.geopn
+    ORDER BY
+      fld_naam_ramses
   ) AS pn;
 SQL;
 

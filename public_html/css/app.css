@@ -3,3 +3,24 @@ html, body, #map {
   width: 100%;
   margin: 0;
 }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.search-overlay {
+  height: 30px;
+  width: 160px;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 999;
+  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.pn-select {
+  width: 160px;
+}

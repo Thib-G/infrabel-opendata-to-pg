@@ -24,17 +24,7 @@ $(document).ready(function() {
       return L.circleMarker(latlng, { radius: 4, color: 'green', opacity: 0.5 });
     },
     onEachFeature: function (feature, layer) {
-      var p = feature.properties;
-      var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
-      var content =
-        '<b>' + p.fld_naam_ramses + '</b>' +
-        '<br /><br />' + p.fld_postcode_en_gemeente +
-        '<br /><br />' + p.fld_actief_passief +
-        '<br /><br />' +
-        '<a href="https://www.google.com/maps/?daddr=' + latlng + '" target="_blank">Google Maps</a> | ' +
-        '<a href="waze://?ll=' + latlng + '" target="_blank">Waze</a> | ' +
-        '<a href="https://maps.apple.com/?daddr=' + latlng + '" target="_blank">Apple</a>';
-      layer.bindPopup(content);
+      addPnPopup(feature, layer);
       layer.on({
         mouseover: function() {
           layer.setStyle({ radius: 6, opacity: 1.0 });
@@ -45,6 +35,20 @@ $(document).ready(function() {
       });
     }
   });
+
+  function addPnPopup (feature, layer) {
+    var p = feature.properties;
+    var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
+    var content =
+      '<b>' + p.fld_naam_ramses + '</b>' +
+      '<br /><br />' + p.fld_postcode_en_gemeente +
+      '<br /><br />' + p.fld_actief_passief +
+      '<br /><br />' +
+      '<a href="https://www.google.com/maps/?daddr=' + latlng + '" target="_blank">Google Maps</a> | ' +
+      '<a href="waze://?ll=' + latlng + '" target="_blank">Waze</a> | ' +
+      '<a href="https://maps.apple.com/?daddr=' + latlng + '" target="_blank">Apple</a>';
+    layer.bindPopup(content);
+  }
 
   var baseLayers = {
     Grey: tiles
@@ -61,10 +65,14 @@ $(document).ready(function() {
 
   $.getJSON('api/get-pn', function (data) {
     pnLayer.addData(data);
+    addSelect2(data);
   });
 
   var lgLoc = L.layerGroup();
   lgLoc.addTo(map);
+
+  var fgSearchResult = L.featureGroup();
+  fgSearchResult.addTo(map);
 
   // map.locate({ setView: true, maxZoom: 14 });
   L.control.locate().addTo(map);
@@ -74,7 +82,7 @@ $(document).ready(function() {
 
   function getKp(e) {
     lgLoc.clearLayers();
-    if (e.type === 'click') {      
+    if (e.type === 'click') {
       var here = L.circleMarker(e.latlng, { radius: 6 });
       here.bindPopup(
         '<p>' +
@@ -92,7 +100,7 @@ $(document).ready(function() {
         'You are within ' + radius + ' meters from this point' +
         '<br />' + e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6) +
         '</p>'
-      );      
+      );
       lgLoc.addLayer(here);
     }
     $.ajax({
@@ -119,6 +127,32 @@ $(document).ready(function() {
           marker.openPopup();
         }
       }
+    });
+  }
+  function addSelect2(geojson) {
+    var options = geojson.features.map(function (feature) {
+      return {
+        id: feature.properties.ogc_fid,
+        text: feature.properties.fld_naam_ramses
+      };
+    });
+    $('.pn-select').select2({
+      placeholder: 'Level crossing',
+      allowClear: true,
+      data: options
+    }).val(null).trigger('change');
+    $('.pn-select').on('select2:select', function (e) {
+      fgSearchResult.clearLayers();
+      var id = +e.params.data.id;
+      var f = $.grep(geojson.features, function (feature) {
+        return feature.properties.ogc_fid === id;
+      })[0];
+      var result = L.geoJSON(f, {
+        onEachFeature: addPnPopup
+      });
+      fgSearchResult.addLayer(result);
+      map.flyToBounds(fgSearchResult.getBounds());
+      result.openPopup();
     });
   }
 });

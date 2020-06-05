@@ -151,7 +151,7 @@ $(document).ready(function() {
         onEachFeature: addPnPopup
       });
       fgSearchResult.addLayer(result);
-      map.flyToBounds(fgSearchResult.getBounds());
+      map.flyTo(fgSearchResult.getBounds().getCenter(), 15);
       result.openPopup();
     });
   }

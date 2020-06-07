@@ -17,7 +17,19 @@ $(document).ready(function() {
     });
   tiles.addTo(map);
 
-  var linesLayer = L.geoJSON();
+  var linesLayer = L.geoJSON(null, {
+    style: { opacity: 0.4 },
+    onEachFeature: function (feature, layer) {
+      layer.on({
+        mouseover: function() {
+          layer.setStyle({ opacity: 1 });
+        },
+        mouseout: function() {
+          layer.setStyle({ opacity: 0.4 });
+        }
+      });
+    }
+  });
   linesLayer.addTo(map);
 
   var pnLayer = L.geoJSON(null, {

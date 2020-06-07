@@ -125,5 +125,8 @@ L 132_1  |MULTIPOINT ((4.39149071186285 50.3731969520237))|
 ![QGIS](qgis.png)
 
 ## Webmap with geolocation
+
+This is a demo map using. It was made using old-school javascript. No framework, no webpack. Just Leaflet and good old JQuery.
+
 https://railbe-lrs.kediss.eu/
 

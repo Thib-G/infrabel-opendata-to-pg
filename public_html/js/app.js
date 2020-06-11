@@ -7,10 +7,10 @@ $(document).ready(function() {
     center: center,
     zoom: zoom
   });
-  var attrib = '<i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/Thib-G/infrabel-opendata-to-pg">Source</a> |  &copy; <a href="https://opendata.infrabel.be">Infrabel</a> ';
+  var attrib = '<i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/Thib-G/infrabel-opendata-to-pg" target="_top">Source</a> |  &copy; <a href="https://opendata.infrabel.be" target="_top">Infrabel</a> ';
   var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}{r}?access_token=' + mapboxKey,
     {
-      attribution: attrib + '&copy; <a href="https://www.mapbox.com/feedback/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: attrib + '&copy; <a href="https://www.mapbox.com/feedback/" target="_top">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright" target="_top">OpenStreetMap</a>',
       tileSize: 512,
       maxZoom: 18,
       zoomOffset: -1

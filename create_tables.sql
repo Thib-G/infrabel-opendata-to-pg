@@ -14,7 +14,8 @@ CREATE TABLE infrabel.geopn (
 	position_du_passage_a_niveau double precision[],
 	fld_actief_passief text,
 	fld_geo_x text,
-	fld_geo_y text
+	fld_geo_y text,
+  type_pn text
 );
 CREATE INDEX ON infrabel.geopn USING gist (geom);
 
@@ -28,6 +29,7 @@ CREATE TABLE infrabel.geotracks (
   ogc_fid serial PRIMARY KEY,
   geom geometry(MultiLineString, 31370),
   status text,
+  etat text,
   trackcode text,
   modifdate date,
   trackname text,
@@ -126,7 +128,8 @@ CREATE TABLE infrabel.points_op (
   commerciallongnamefrench text,
   shortnamedutch text,
   id text,
-  longnamedutch text
+  longnamedutch text,
+  class_fr text
 );
 CREATE INDEX ON infrabel.points_op USING gist (geom);
 

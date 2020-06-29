@@ -17,8 +17,8 @@ ogr2ogr -a_srs EPSG:31370 -f PGDump -nln geotracks -lco "GEOMETRY_NAME=geom" -lc
 wget -nv -O kp.json "https://opendata.infrabel.be/explore/dataset/kilometerpalen-op-het-netwerk/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.kp;'
 ogr2ogr -a_srs EPSG:31370 -f PGDump -nln kp -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "kp.json" | psql -U $pguser -d $db_name -q -f -
-# Sections de ligne https://opendata.infrabel.be/explore/dataset/segmentatie-volgens-de-eigenschappen-van-de-infrastructuur-en-de-exploitatiemoge
-wget -nv -O line_sections.json "https://opendata.infrabel.be/explore/dataset/segmentatie-volgens-de-eigenschappen-van-de-infrastructuur-en-de-exploitatiemoge/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
+# Sections de ligne https://opendata.infrabel.be/explore/dataset/lijnsecties
+wget -nv -O line_sections.json "https://opendata.infrabel.be/explore/dataset/lijnsecties/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.line_sections;'
 ogr2ogr -a_srs EPSG:31370 -f PGDump -nln line_sections -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "line_sections.json" | psql -U $pguser -d $db_name -q -f -
 # Points opérationnels https://opendata.infrabel.be/explore/dataset/operationele-punten-van-het-newterk
@@ -28,7 +28,7 @@ ogr2ogr -a_srs EPSG:31370 -f PGDump -nln points_op -lco "GEOMETRY_NAME=geom" -lc
 # Segments de voies https://opendata.infrabel.be/explore/dataset/geografische-positie-van-alle-spoorsegmenten
 wget -nv -O track_segments.json "https://opendata.infrabel.be/explore/dataset/geografische-positie-van-alle-spoorsegmenten/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.track_segments;'
-ogr2ogr -a_srs EPSG:31370 -f PGDump -nln track_segments -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "track_segments.json" | psql -U $pguser -d $db_name -q -f -
+ogr2ogr -a_srs EPSG:31370 -f PGDump -nln track_segments -nlt PROMOTE_TO_MULTI -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "track_segments.json" | psql -U $pguser -d $db_name -q -f -
 # Association BK et lignes https://opendata.infrabel.be/explore/dataset/relatie-tussen-kilometerpalen-en-lijnen
 wget -nv -O kp_by_line.csv "https://opendata.infrabel.be/explore/dataset/relatie-tussen-kilometerpalen-en-lijnen/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=,"
 psql -U $pguser -d $db_name \

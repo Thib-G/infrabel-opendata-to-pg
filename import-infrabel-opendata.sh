@@ -12,7 +12,7 @@ ogr2ogr -a_srs EPSG:31370 -f PGDump -nln geopn -lco "GEOMETRY_NAME=geom" -lco "S
 # Geovoies https://opendata.infrabel.be/explore/dataset/geosporen
 wget -nv -O geotracks.json "https://opendata.infrabel.be/explore/dataset/geosporen/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.geotracks;'
-ogr2ogr -a_srs EPSG:31370 -f PGDump -nln geotracks -nlt PROMOTE_TO_MULTI -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "geotracks.json" | psql -U $pguser -d $db_name -q -f -
+ogr2ogr -where "OGR_GEOMETRY='LineString' OR OGR_GEOMETRY='MultiLineString'" -a_srs EPSG:31370 -f PGDump -nln geotracks -nlt PROMOTE_TO_MULTI -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "geotracks.json" | psql -U $pguser -d $db_name -q -f -
 # Bornes kilométriques https://opendata.infrabel.be/explore/dataset/kilometerpalen-op-het-netwerk
 wget -nv -O kp.json "https://opendata.infrabel.be/explore/dataset/kilometerpalen-op-het-netwerk/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.kp;'

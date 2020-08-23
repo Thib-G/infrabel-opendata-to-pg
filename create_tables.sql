@@ -127,7 +127,7 @@ CREATE TABLE infrabel.points_op (
   commerciallongnamedutch text,
   commerciallongnamefrench text,
   shortnamedutch text,
-  id text,
+  ptcarid text,
   longnamedutch text,
   class_fr text
 );

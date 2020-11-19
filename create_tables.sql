@@ -15,7 +15,8 @@ CREATE TABLE infrabel.geopn (
 	fld_actief_passief text,
 	fld_geo_x text,
 	fld_geo_y text,
-  type_pn text
+	type_pn text,
+	type_lc text
 );
 CREATE INDEX ON infrabel.geopn USING gist (geom);
 
@@ -36,7 +37,8 @@ CREATE TABLE infrabel.geotracks (
   linecnum int,
   geo_point_2d double precision[],
   linecalfa text,
-  id int
+  id int,
+  exploitation text
 );
 CREATE INDEX ON infrabel.geotracks USING gist (geom);
 
@@ -129,7 +131,8 @@ CREATE TABLE infrabel.points_op (
   shortnamedutch text,
   ptcarid text,
   longnamedutch text,
-  class_fr text
+  class_fr text,
+  class_en text
 );
 CREATE INDEX ON infrabel.points_op USING gist (geom);
 

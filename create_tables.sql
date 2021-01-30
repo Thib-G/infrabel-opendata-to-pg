@@ -67,7 +67,11 @@ DROP TABLE IF EXISTS infrabel.kp_by_line;
 
 CREATE TABLE infrabel.kp_by_line (
   kp_id int,
+  kp_name text,
   line_id int,
+  line_name text,
+  geo_point text,
+  geo_shape text,
   PRIMARY KEY (kp_id, line_id)
 );
 

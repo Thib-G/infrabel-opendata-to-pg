@@ -72,11 +72,11 @@ $(document).ready(function() {
   };
   L.control.layers(baseLayers, overlays).addTo(map);
 
-  $.getJSON('api/get-lines', function (data) {
+  $.getJSON('geo/lines.json', function (data) {
     linesLayer.addData(data);
   });
 
-  $.getJSON('api/get-pn', function (data) {
+  $.getJSON('geo/pn.json', function (data) {
     pnLayer.addData(data);
     addSelect2(data);
   });

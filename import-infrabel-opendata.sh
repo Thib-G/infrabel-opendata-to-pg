@@ -39,3 +39,9 @@ psql -U $pguser -d $db_name \
 	-c 'REFRESH MATERIALIZED VIEW infrabel.kp_by_track_mv;' \
 	-c 'REFRESH MATERIALIZED VIEW infrabel.geotracks_dumped_mv;' \
 	-c 'REFRESH MATERIALIZED VIEW infrabel.geotracks_lrs_mv;'
+# Pre-render lines
+wget -nv -O lines.json "https://railbe-lrs.kediss.eu/api/get-lines"
+cp lines.json /var/www/railbe-lrs.kediss.eu/public_html/geo
+# Pre-render level crossings
+wget -nv -O pn.json "https://railbe-lrs.kediss.eu/api/get-pn"
+cp pn.json /var/www/railbe-lrs.kediss.eu/public_html/geo

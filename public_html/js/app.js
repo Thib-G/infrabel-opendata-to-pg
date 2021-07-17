@@ -127,12 +127,17 @@ $(document).ready(function() {
           var marker = L.geoJSON(data);
           marker.bindPopup(function (layer) {
             var p = layer.feature.properties;
+            var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
             var content =
               '<p>' +
               'Track: <b>' + p.trackcode + '</b>' +
               '<br />KP: <b>' + p.measure.toFixed() + '</b>' +
               '<br />' + layer.getLatLng().lat.toFixed(6) + ',' + layer.getLatLng().lng.toFixed(6) +
               '<br />Distance from ' + e.type + ': ' + p.distance.toFixed() + ' m' +
+              '<br /><br />' +
+              '<a href="https://www.google.com/maps/?daddr=' + latlng + '" target="_blank">Google Maps</a> | ' +
+              '<a href="waze://?ll=' + latlng + '" target="_blank">Waze</a> | ' +
+              '<a href="https://maps.apple.com/?daddr=' + latlng + '" target="_blank">Apple</a>';
               '</p>';
             return content;
           });

@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS infrabel.kp;
 
 CREATE TABLE infrabel.kp (
   ogc_fid serial PRIMARY KEY,
-  geom geometry(MultiPoint, 31370) NULL,
+  geom geometry(MultiPointZ, 31370) NULL,
   y text,
   x text,
   id int4 NULL,
@@ -148,7 +148,7 @@ DROP TABLE IF EXISTS infrabel.track_segments;
 
 CREATE TABLE infrabel.track_segments (
   ogc_fid serial PRIMARY KEY,
-  geom geometry(MultiLineString, 31370),
+  geom geometry(MultiLineStringZ, 31370),
   id int,
   geo_point_2d _float8
 );

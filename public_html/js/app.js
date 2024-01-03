@@ -49,6 +49,12 @@ $(document).ready(function() {
     }
   });
 
+  var arrLayer = L.geoJSON(null, {
+    onEachFeature: function (feature, layer) {
+      layer.bindTooltip(feature.properties.arr_nr + ' ' + feature.properties.arr_name);
+    }
+  });
+
   function addPnPopup (feature, layer) {
     var p = feature.properties;
     var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
@@ -68,7 +74,8 @@ $(document).ready(function() {
   };
   var overlays = {
     Tracks: linesLayer,
-    'Level crossings': pnLayer
+    'Level crossings': pnLayer,
+    Arrondissements: arrLayer
   };
   L.control.layers(baseLayers, overlays).addTo(map);
 
@@ -79,6 +86,10 @@ $(document).ready(function() {
   $.getJSON('geo/pn.json', function (data) {
     pnLayer.addData(data);
     addSelect2(data);
+  });
+
+  $.getJSON('arr/arr.json', function (data) {
+    arrLayer.addData(data);
   });
 
   var lgLoc = L.layerGroup();

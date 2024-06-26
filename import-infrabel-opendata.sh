@@ -21,8 +21,8 @@ ogr2ogr -a_srs EPSG:31370 -f PGDump -nln kp -nlt PROMOTE_TO_MULTI -lco "GEOMETRY
 wget -nv -O line_sections.json "https://opendata.infrabel.be/explore/dataset/lijnsecties/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.line_sections;'
 ogr2ogr -a_srs EPSG:31370 -f PGDump -nln line_sections -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "line_sections.json" | psql -U $pguser -d $db_name -q -f -
-# Points opérationnels https://opendata.infrabel.be/explore/dataset/operationele-punten-van-het-newterk
-wget -nv -O points_op.json "https://opendata.infrabel.be/explore/dataset/operationele-punten-van-het-newterk/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
+# Points opérationnels https://opendata.infrabel.be/explore/dataset/operationele-punten-van-het-netwerk
+wget -nv -O points_op.json "https://opendata.infrabel.be/explore/dataset/operationele-punten-van-het-netwerk/download/?format=geojson&timezone=Europe/Berlin&lang=fr&epsg=31370"
 psql -U $pguser -d $db_name -c 'TRUNCATE infrabel.points_op;'
 ogr2ogr -a_srs EPSG:31370 -f PGDump -nln points_op -lco "GEOMETRY_NAME=geom" -lco "SCHEMA=infrabel" -lco "CREATE_SCHEMA=OFF" -lco "CREATE_TABLE=OFF" -append /vsistdout/ "points_op.json" | psql -U $pguser -d $db_name -q -f -
 # Segments de voies https://opendata.infrabel.be/explore/dataset/geografische-positie-van-alle-spoorsegmenten

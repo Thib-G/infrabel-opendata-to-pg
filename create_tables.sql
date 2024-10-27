@@ -245,7 +245,7 @@ SELECT
   a.geom
 FROM
   a
-WINDOW w AS (PARTITION BY a.tra_id, a.nr ORDER BY a.kp_name)
+WINDOW w AS (PARTITION BY a.tra_id, a.nr ORDER BY a.fraction)
 ORDER BY
   a.tra_id,
   a.nr,

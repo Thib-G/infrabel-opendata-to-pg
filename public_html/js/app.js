@@ -55,6 +55,24 @@ $(document).ready(function() {
     }
   });
 
+  var lciLayer = L.geoJSON(null, {
+    pointToLayer: function (geoJsonPoint, latlng) {
+      return L.circleMarker(latlng, { radius: 6, color: 'darkred', opacity: 0.5 });
+    },
+    onEachFeature: function (feature, layer) {
+      addLciPopup(feature, layer);
+      layer.on({
+        mouseover: function() {
+          layer.setStyle({ radius: 8, opacity: 1.0 });
+        },
+        mouseout: function() {
+          layer.setStyle({ radius: 6, opacity: 0.5 });
+        }
+      });
+    }
+  });
+  lciLayer.addTo(map);
+
   function addPnPopup (feature, layer) {
     var p = feature.properties;
     var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
@@ -69,13 +87,28 @@ $(document).ready(function() {
     layer.bindPopup(content);
   }
 
+  function addLciPopup (feature, layer) {
+    var p = feature.properties;
+    var latlng = layer.getLatLng().lat + ',' + layer.getLatLng().lng;
+    var content =
+      '<h4>' + p.name + '</h4>' +
+      '<p>' + p.address + '</p>' +
+      '<p>' +
+      '<a href="https://www.google.com/maps/?daddr=' + latlng + '" target="_blank">Google Maps</a> | ' +
+      '<a href="waze://?ll=' + latlng + '" target="_blank">Waze</a> | ' +
+      '<a href="https://maps.apple.com/?daddr=' + latlng + '" target="_blank">Apple</a>' +
+      '</p>';
+    layer.bindPopup(content);
+  }
+
   var baseLayers = {
     Grey: tiles
   };
   var overlays = {
     Tracks: linesLayer,
     'Level crossings': pnLayer,
-    Arrondissements: arrLayer
+    Arrondissements: arrLayer,
+    LCIs: lciLayer
   };
   L.control.layers(baseLayers, overlays).addTo(map);
 
@@ -90,6 +123,10 @@ $(document).ready(function() {
 
   $.getJSON('arr/arr.json', function (data) {
     arrLayer.addData(data);
+  });
+
+  $.getJSON('geo/clis.json', function (data) {
+    lciLayer.addData(data);
   });
 
   var lgLoc = L.layerGroup();

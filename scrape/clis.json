@@ -69,12 +69,12 @@
 { "type": "Feature", "properties": { "name": "CLI Luttre", "address": "Rue de l'Atelier Central  BE- 6230 Pont-à-Celles" }, "geometry": { "type": "Point", "coordinates": [ 4.374914, 50.506037 ] } },
 { "type": "Feature", "properties": { "name": "CLI La Louvière", "address": "Rue des Fonds Gaillards  BE- 7100 La Louvière" }, "geometry": { "type": "Point", "coordinates": [ 4.1857024999999, 50.4634171 ] } },
 { "type": "Feature", "properties": { "name": "CLI Jemelle", "address": "Route des Forrières  BE- 5580 Jemelle" }, "geometry": { "type": "Point", "coordinates": [ 5.2709222, 50.148998 ] } },
-{ "type": "Feature", "properties": { "name": "CLI Charleroi", "address": "Rue Champeau 1  BE- 6061 Montignies-sur-Sambre" }, "geometry": { "type": "Point", "coordinates": [ 4.4971897, 50.4035205 ] } },
 { "type": "Feature", "properties": { "name": "CLI Ath", "address": "Chemin des Cheminots  BE- 7800 Ath" }, "geometry": { "type": "Point", "coordinates": [ 3.781526, 50.6269376 ] } },
 { "type": "Feature", "properties": { "name": "CLI Arlon", "address": "Rue des Thermes Romains 7  BE- 6700 Arlon" }, "geometry": { "type": "Point", "coordinates": [ 5.8140664, 49.6802133 ] } },
 { "type": "Feature", "properties": { "name": "CLI Ans", "address": "Rue Aily  BE-  4430 Ans" }, "geometry": { "type": "Point", "coordinates": [ 5.5039661000001, 50.6609948 ] } },
 { "type": "Feature", "properties": { "name": "CLI Angleur", "address": "Route de Tilff  BE- 4020 Angleur" }, "geometry": { "type": "Point", "coordinates": [ 5.5912717, 50.5980063 ] } },
 { "type": "Feature", "properties": { "name": "Central warehouse", "address": "Rue Pré aux Oies 301 1130 Bruxelles" }, "geometry": { "type": "Point", "coordinates": [ 4.418049, 50.900516 ] } },
-{ "type": "Feature", "properties": { "name": "Atelier Bascoup", "address": "Rue d'Anderlues 187  BE- 7160 Chapelle-lez-Herlaimont" }, "geometry": { "type": "Point", "coordinates": [ 4.2696192999999, 50.460922 ] } }
+{ "type": "Feature", "properties": { "name": "Atelier Bascoup", "address": "Rue d'Anderlues 187  BE- 7160 Chapelle-lez-Herlaimont" }, "geometry": { "type": "Point", "coordinates": [ 4.2696192999999, 50.460922 ] } },
+{ "type": "Feature", "properties": { "name": "CLI Charleroi", "address": "rue Cambier Dupret 1 - 6000 Charleroi" }, "geometry": { "type": "Point", "coordinates": [ 4.445280508667708, 50.404671658461069 ] } }
 ]
 }

@@ -49,10 +49,18 @@ for page in pages:
     soup = BeautifulSoup(html_doc, 'html.parser')
     lcis += get_lcis(soup)
 
+lcis = [item for item in lcis if item['name'] != 'CLI Charleroi']
+lcis.append({
+    'name': 'CLI Charleroi',
+    'address': 'rue Cambier Dupret 1 - 6000 Charleroi',
+    'lng': 4.445280508667708,
+    'lat': 50.40467165846107,
+})
+
 # %%
 df = pd.DataFrame(lcis)
+
 gdf = gpd.GeoDataFrame(df[[col for col in df.columns if col not in ['lng', 'lat']]], geometry=gpd.points_from_xy(df.lng, df.lat, crs='EPSG:4326'))
-gdf
 
 # %%
 gdf.to_file("clis.json", driver="GeoJSON")

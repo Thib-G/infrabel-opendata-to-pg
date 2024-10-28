@@ -16,7 +16,7 @@ r.status_code
 
 # %%
 html_doc = r.text
-soup = BeautifulSoup(html_doc)
+soup = BeautifulSoup(html_doc, 'html.parser')
 
 # %%
 # building a set using {} to avoid duplicates
@@ -46,7 +46,7 @@ lcis = []
 for page in pages:
     r = scraper.get(url.format(page=page))
     html_doc = r.text
-    soup = BeautifulSoup(html_doc)
+    soup = BeautifulSoup(html_doc, 'html.parser')
     lcis += get_lcis(soup)
 
 # %%
@@ -56,8 +56,4 @@ gdf
 
 # %%
 gdf.to_file("clis.json", driver="GeoJSON")
-
-# %%
-
-
 
